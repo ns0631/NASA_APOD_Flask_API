@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Thank you!</title>
+        <meta charset="UTF-8">
+    </head>
+    <body style="background-color:forestgreen; font-family:Palatino;">
+            <h1>Thank you for using this service!</h1>
+            <h2>The image can be found in the flaskprojects directory.</h2>
+            <p><a style="font-weight:bold;">A Brief Explanation of the Photo</a><p>
+        {% for key, value in result.items() %}
+            <p><a> {{ value }} </a></p>
+        {% endfor %}
+        <h2><a href="http://localhost:5000">Revisit the home page</a></h2>
+    </body>
+</html>
