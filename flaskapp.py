@@ -1,6 +1,6 @@
 #When using this program, please be patient with the loading process.
 from flask import Flask, render_template, request
-import requests, json, os, datetime
+import requests, json, os, datetime, sys
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
@@ -87,20 +87,31 @@ def result():
                         return render_template('connectionfailure.html')
                     else:
                         #PNG/JPEG file is written
-                        img_file = open('newimg.png', 'wb')
-                        img_file.write(img_content)
-                        img_file.close()
+                        try:
+                            img_file = open('newimg.png', 'wb')
+                            img_file.write(img_content)
+                            img_file.close()
 
-                        target_name = 'Photo from NASA on %s.pdf' % user_date
+                            target_name = 'Photo_from_NASA_on_%s.pdf' % user_date
 
-                        #Image file is converted to PDF
-                        make_pdf('newimg.png', target_name, json_content['explanation'])
-                        os.remove('newimg.png')
+                            #Image file is converted to PDF
+                            make_pdf('newimg.png', target_name, json_content['explanation'])
+                            os.remove('newimg.png')
+                        except:
+                            error_code = str(sys.exc_info()[0]) + '\n'
+                            error_file = open('errors.txt', 'a')
+                            error_file.write(error_code)
+                            error_file.close()
 
                         #The user sees a new page containing the caption
                         return render_template('result.html', result={'Caption': json_content['explanation']})
 
-
 if __name__ == '__main__':
     #Runs app
-    app.run(debug=True)
+    try:
+        app.run(debug=True)
+    except:
+        error_code = str(sys.exc_info()[0]) + '\n'
+        error_file = open('errors.txt', 'a')
+        error_file.write(error_code)
+        error_file.close()
