@@ -1,7 +1,26 @@
 #When using this program, please be patient with the loading process.
 from flask import Flask, render_template, request
-from PIL import Image
 import requests, json, os, datetime
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.units import inch
+
+def make_pdf(image_name, title, text):
+    document = SimpleDocTemplate(title ,pagesize=letter, rightMargin=0, leftMargin=0, topMargin=0, bottomMargin=0)
+    final_pdf = list()
+
+    im = Image(image_name, 5*inch, 5*inch)
+    final_pdf.append(im)
+
+    style_sheet = getSampleStyleSheet()
+
+    style_sheet.add(ParagraphStyle(name='SpaceImage'))
+    text_on_pdf = '<font size=12>%s</font>' % text
+
+    final_pdf.append(Paragraph(text_on_pdf, style_sheet['Heading1']))
+
+    document.build(final_pdf)
 
 #Makes main instance
 app = Flask(__name__)
@@ -72,12 +91,10 @@ def result():
                         img_file.write(img_content)
                         img_file.close()
 
+                        target_name = 'Photo from NASA on %s.pdf' % user_date
+
                         #Image file is converted to PDF
-                        filename = 'NASA\'s Photo on %s.pdf' % user_date
-                        png_image = Image.open('newimg.png')
-                        pdf_image = png_image.convert('RGB')
-                        pdf_image.save(filename)
-                        #The original picture is removed
+                        make_pdf('newimg.png', target_name, json_content['explanation'])
                         os.remove('newimg.png')
 
                         #The user sees a new page containing the caption
