@@ -1,6 +1,6 @@
 #When using this program, please be patient with the loading process.
 from flask import Flask, render_template, request
-import requests, json, os, datetime, sys
+import requests, json, os, datetime, sys, subprocess
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
@@ -92,6 +92,7 @@ def result():
                             img_file.write(img_content)
                             img_file.close()
 
+                            global target_name
                             target_name = 'Photo_from_NASA_on_%s.pdf' % user_date
 
                             #Image file is converted to PDF
