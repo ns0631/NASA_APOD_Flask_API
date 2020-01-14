@@ -11,6 +11,9 @@
         {% for key, value in result.items() %}
             <p><a> {{ value }} </a></p>
         {% endfor %}
+        <form action="http://localhost:5000/opening" method="POST">
+            <p><input type="submit" value="Open image"/></p>
+        </form>
         <h2><a href="http://localhost:5000">Revisit the home page</a></h2>
     </body>
 </html>
